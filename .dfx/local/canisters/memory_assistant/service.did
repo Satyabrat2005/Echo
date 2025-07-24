@@ -1,0 +1,37 @@
+type UserRole = 
+ variant {
+   Admin;
+   Caregiver;
+   Patient;
+ };
+type Time = int;
+type MemoryAnalytics = 
+ record {
+   failedRecalls: nat;
+   mostCommonQuery: text;
+   successfulRecalls: nat;
+   totalQueries: nat;
+ };
+type EmergencyContact = 
+ record {
+   name: text;
+   phone: text;
+   relationship: text;
+ };
+type Anchor = 
+ record {
+   lastAccessed: Time;
+   priority: nat;
+   question: text;
+   response: text;
+ };
+service : {
+  addEmergencyContact: (text, text, text) -> (text);
+  getAnalytics: () -> (MemoryAnalytics) query;
+  getEmergencyContacts: () -> (vec EmergencyContact) query;
+  getMemory: (text) -> (text) query;
+  listAnchors: () -> (vec Anchor) query;
+  registerUser: (text, UserRole) -> (text);
+  removeAnchor: (text) -> (text);
+  setAnchor: (text, text) -> (text);
+}
