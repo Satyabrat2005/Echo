@@ -16,7 +16,7 @@ actor MemoryAssistant {
     question : Text;
     response : Text;
     lastAccessed : Time.Time;
-    priority : Nat; // Higher = more important
+    priority : Nat;
   };
 
   type UserRole = {
@@ -57,7 +57,6 @@ actor MemoryAssistant {
   };
 
   // ====== INITIALIZATION ======
-  // Preload with default anchors
   anchors.put("Who are you?", {
     question = "Who are you?";
     response = "I’m your Memory Assistant. You’re safe, and I’m here to help.";
@@ -67,24 +66,22 @@ actor MemoryAssistant {
 
   anchors.put("Where am I?", {
     question = "Where am I?";
-    response = "You’re at home, in your living room. It’s " # (debug_show (Time.now())) # ".";
+    response = "You’re at home, in your living room. It’s " # debug_show(Time.now()) # ".";
     lastAccessed = Time.now();
     priority = 9;
   });
 
   // ====== CORE FUNCTIONS ======
-  // AI-enhanced response handling
   public query func getMemory(q : Text) : async Text {
     analytics := {
       totalQueries = analytics.totalQueries + 1;
       successfulRecalls = analytics.successfulRecalls;
       failedRecalls = analytics.failedRecalls;
-      mostCommonQuery = if q.size() > analytics.mostCommonQuery.size() then q else analytics.mostCommonQuery;
+      mostCommonQuery = (if (Text.size(q) > Text.size(analytics.mostCommonQuery)) q else analytics.mostCommonQuery);
     };
 
     switch (anchors.get(q)) {
       case (?anchor) {
-        // Update last accessed time
         anchors.put(q, {
           question = anchor.question;
           response = anchor.response;
@@ -107,7 +104,7 @@ actor MemoryAssistant {
           mostCommonQuery = analytics.mostCommonQuery;
         };
         let similar = findSimilarMemory(q);
-        if (similar.size() > 0) {
+        if (Text.size(similar) > 0) {
           "Did you mean: '" # similar # "'?";
         } else {
           "I’m not sure, but you’re safe. Would you like me to remember this for next time?";
@@ -116,7 +113,6 @@ actor MemoryAssistant {
     };
   };
 
-  // Fuzzy search for similar memories
   func findSimilarMemory(q : Text) : Text {
     let queryWords = Text.split(q, #char ' ');
     var bestMatch : Text = "";
@@ -160,16 +156,13 @@ actor MemoryAssistant {
   };
 
   public query func listAnchors() : async [Anchor] {
-    let buffer = Buffer.Buffer<Anchor>(anchors.size());
-    for (anchor in anchors.vals()) {
-      buffer.add(anchor);
-    };
-    Buffer.sort(buffer, func (a : Anchor, b : Anchor) : { #less; #equal; #greater } {
+    let unsorted : [Anchor] = Iter.toArray(anchors.vals());
+    Array.sort<Anchor>(unsorted, func(a, b) {
       if (a.priority > b.priority) #less
       else if (a.priority < b.priority) #greater
       else #equal
     });
-    Buffer.toArray(buffer);
+    return unsorted;
   };
 
   // ====== EMERGENCY PROTOCOLS ======
