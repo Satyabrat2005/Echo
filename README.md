@@ -1,4 +1,4 @@
-#<b> ECHO: AI-Powered Memory Assistant for Alzheimer’s Patients</b>
+# <b> ECHO: AI-Powered Memory Assistant for Alzheimer’s Patients</b>
 
 ## Overview
 ECHO is a modular, privacy-first memory assistant built on the Internet Computer Protocol (ICP). It helps Alzheimer’s patients with context-aware cues and supports caregivers with real-time alerts and memory anchoring.
