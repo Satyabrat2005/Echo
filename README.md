@@ -1,8 +1,39 @@
-# ECHO: AI-Powered Memory Assistant for Alzheimer’s Patients
+#<b> ECHO: AI-Powered Memory Assistant for Alzheimer’s Patients</b>
 
 ## Overview
 ECHO is a modular, privacy-first memory assistant built on the Internet Computer Protocol (ICP). It helps Alzheimer’s patients with context-aware cues and supports caregivers with real-time alerts and memory anchoring.
 
+
+
+## ✅ Features
+
+| Feature                          | Description |
+|----------------------------------|-------------|
+| 🧠 Smart Memory Queries           | Answers patient questions using pre-set or AI-generated responses |
+| 🔐 On-chain Actor Logic (Motoko) | Secure, tamper-proof memory logic stored on ICP |
+| 👩‍⚕ Caregiver Anchoring          | Caregivers can set names, identities, or routine facts for recall |
+| 🧪 Emotion Detection (Optional)   | Detects vocal stress using Whisper or pyAudioAnalysis |
+| 🧩 Dspy-AI Reasoning (Optional)   | LLM agent generates calming, empathetic, dynamic replies |
+| 📲 Real-time Caregiver Alerts     | Notifies family in critical behavior (e.g., wandering or distress) |
+| 🌐 agent-js Frontend              | Lightweight HTML/JS interface that talks to ICP canister |
+| 🔗 Inter-Canister Communication   | Future support for caregiver ↔ patient sync architecture |
+| 📊 Logging & Analytics            | Optional logging of queries for pattern review and analytics |
+| 🛠 Modular Design                 | Easy to extend with face recognition, TTS, IoT, and more |
+
+---
+
+## 🧱 Architecture Overview
+
+```plaintext
+[Patient Device / Web Interface]
+        ↓
+  [agent-js → ICP Canister]
+        ↓
+[MemoryAssistant.mo (Motoko)]
+        ↓     ↑
+ [ML API (FastAPI + Whisper)]
+        ↓
+[Empathetic Reply / Alert / Log]
 ## Project Structure
 ### Tech Stack
 
