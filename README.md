@@ -51,7 +51,7 @@ ECHO is a modular, privacy-first memory assistant built on the Internet Computer
 ## Setup & Deployment
 
 ### Prerequisites
-- [DFX SDK](https://internetcomputer.org/docs/current/developer-docs/setup/install/) (for Motoko/ICP)
+- DFX SDK (for Motoko/ICP)
 - Node.js (for frontend/agent-js)
 - Python 3.8+ (for backend-ml, optional)
 
