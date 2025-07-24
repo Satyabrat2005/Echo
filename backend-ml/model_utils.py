@@ -1,13 +1,20 @@
-def detect_emotion(text: str) -> str:
-    text = text.lower()
+import pandas as pd
+from sklearn.pipeline import make_pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
 
-    if any(w in text for w in ["scared", "afraid", "lost", "help"]):
-        return "anxious"
-    elif any(w in text for w in ["angry", "mad", "upset"]):
-        return "frustrated"
-    elif any(w in text for w in ["happy", "glad", "okay", "fine"]):
-        return "calm"
-    elif any(w in text for w in ["tired", "sleepy", "weak"]):
-        return "exhausted"
-    else:
-        return "neutral"
+# Load your CSV file with labeled emotion data
+df = pd.read_csv("ml_data.csv")  # Make sure this file is in the same folder
+
+# Create a pipeline: vectorizer + classifier
+model = make_pipeline(
+    TfidfVectorizer()
+    LogisticRegression()
+)
+
+# Train the model
+model.fit(df["text"], df["emotion"])
+
+# Prediction function for FastAPI
+def detect_emotion(text: str) -> str:
+    return model.predict([text])[0] # type: ignore
