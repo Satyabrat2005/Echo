@@ -7,7 +7,8 @@ import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import Time "mo:base/Time";
-
+import Int "mo:base/Int";
+import Option "mo:base/Option";
 actor MemoryAssistant {
 
   type Anchor = {
@@ -62,7 +63,7 @@ actor MemoryAssistant {
 
   anchors.put("Where am I?", {
     question = "Where am I?";
-    response = "You’re at home, in your living room. It’s " # debug_show(Time.now()) # ".";
+    response = "You’re at home, in your living room. It’s " # Nat.toText(Int.abs(Time.now())) # ".";
     lastAccessed = Time.now();
     priority = 9;
   });
@@ -118,8 +119,8 @@ actor MemoryAssistant {
     }
   };
 
-  func findSimilarMemory(query : Text) : Text {
-    let queryWords = Text.split(query, #char ' ');
+  func findSimilarMemory(qtext : Text) : Text {
+    let queryWords = Text.split(qtext, #char ' ');
     var bestMatch : Text = "";
     var bestScore : Nat = 0;
 
@@ -133,7 +134,7 @@ actor MemoryAssistant {
             score += 1;
           }
         }
-      }
+      };
 
       if (score > bestScore) {
         bestScore := score;
@@ -146,7 +147,7 @@ actor MemoryAssistant {
   public shared({ caller }) func setAnchor(q : Text, r : Text) : async Text {
     assert isCaregiverOrAdmin(caller);
     anchors.put(q, {
-      query = q;
+      question = q;
       response = r;
       lastAccessed = Time.now();
       priority = 5;
@@ -165,12 +166,13 @@ actor MemoryAssistant {
     for (anchor in anchors.vals()) {
       buffer.add(anchor);
     };
-    Buffer.sort(buffer, func (a : Anchor, b : Anchor) : { #less; #equal; #greater } {
+    let arr = Buffer.toArray(buffer);
+    let sortedArr = Array.sort<Anchor>(arr, func (a : Anchor, b : Anchor) : { #less; #equal; #greater } {
       if (a.priority > b.priority) { #less }
       else if (a.priority < b.priority) { #greater }
       else { #equal }
     });
-    return Buffer.toArray(buffer);
+    return sortedArr;
   };
 
   public func addEmergencyContact(name : Text, phone : Text, relationship : Text) : async Text {
