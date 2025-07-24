@@ -34,6 +34,7 @@ ECHO is a modular, privacy-first memory assistant built on the Internet Computer
  [ML API (FastAPI + Whisper)]
         ↓
 [Empathetic Reply / Alert / Log]
+```
 ## Project Structure
 ### Tech Stack
 
