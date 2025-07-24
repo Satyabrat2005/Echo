@@ -5,13 +5,8 @@
       "type": "motoko"
     },
     "frontend": {
-      "main": "frontend",
+      "source": ["frontend"],
       "type": "assets"
-    }
-  },
-  "defaults": {
-    "build": {
-      "packtool": "vessel"
     }
   },
   "version": 1
