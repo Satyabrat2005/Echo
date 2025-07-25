@@ -2,9 +2,20 @@
 
 ## Overview
 ECHO is a modular, privacy-first memory assistant built on the Internet Computer Protocol (ICP). It helps Alzheimer’s patients with context-aware cues and supports caregivers with real-time alerts and memory anchoring.
+
+## Website Overview
 ![My Image](basic.png)
 
+## Backend Overview
 
+# Text emotion detection
+![WhatsApp Image 2025-07-25 at 15 00 24_d09a03ad](https://github.com/user-attachments/assets/36e8eb8b-bfc2-4c62-bb7f-42952645cb97)
+
+# Voice to text emotion detection
+![WhatsApp Image 2025-07-25 at 15 00 24_2f34ac18](https://github.com/user-attachments/assets/6d2623a1-a8f3-40d7-a462-4e679c4d0f4f)
+
+# Emotion Detection Stats
+![WhatsApp Image 2025-07-25 at 15 00 24_9b7656b0](https://github.com/user-attachments/assets/65d1dc84-2732-49a8-8bef-6c882c42f10b)
 
 ## ✅ Features
 
