@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
     /* Dark Theme Palette */
     --bg-primary: #0f0f0f;
