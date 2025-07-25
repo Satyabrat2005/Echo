@@ -5,6 +5,7 @@ ECHO is a modular, privacy-first memory assistant built on the Internet Computer
 
 
 
+
 ## ✅ Features
 
 | Feature                          | Description |
