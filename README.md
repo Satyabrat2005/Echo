@@ -4,9 +4,9 @@
 ECHO is a modular, privacy-first memory assistant built on the Internet Computer Protocol (ICP). It helps Alzheimer’s patients with context-aware cues and supports caregivers with real-time alerts and memory anchoring.
 
 ## Team Overview 
-# Frontend work :- @Archana15-codes
-# Backend Work :- @Kartik1446, Satyabrat2005
-# IOT work :- @GitGudScrubss
+# Frontend  :- @Archana15-codes
+# Backend :- @Kartik1446, Satyabrat2005
+# IOT :- @GitGudScrubss
 
 ## Website Overview
 ![My Image](basic.png)
@@ -129,6 +129,11 @@ To connect the frontend to the Motoko canister locally:
 ![ECHO_Documentation](ECHO_Full_Hardware_Documentation_With_Netlist.pdf)
 
 ![My Image1](frontend/assets/ECHO_mapping-page-001.jpg)
+
+## Hardware connection
+
+<img width="1723" height="892" alt="ECHO1 1" src="https://github.com/user-attachments/assets/778fe28d-b9f0-47bd-bd16-8efb0725286d" />
+
 
 ## Hardware Overview
 ![WhatsApp Image 2025-07-26 at 21 03 29_388f11a4](https://github.com/user-attachments/assets/cf494a0e-cb62-4daa-99a7-825c485d37c1)
