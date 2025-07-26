@@ -124,3 +124,81 @@ To connect the frontend to the Motoko canister locally:
 ![ECHO_Documentation](ECHO_Full_Hardware_Documentation_With_Netlist.pdf)
 
 ![My Image1](frontend/assets/ECHO_mapping-page-001.jpg)
+
+## 🖥️ Core Components
+
+| Component        | Description                                    |
+|------------------|------------------------------------------------|
+| **ESP32-S3-WROOM** (U4) | Dual-core MCU with USB OTG, AI acceleration, and camera interface |
+| **OV2640** (CAM1)       | 2MP camera module for capturing images and video |
+| **PAM8403** (U6)         | Stereo audio amplifier for driving speakers |
+| **TP4056** (U1)          | Li-Ion battery charger with status indicators |
+| **AMS1117-3.3** (U2)     | Linear voltage regulator to supply 3.3V |
+| **MT3608** (U3)          | Boost converter (optional power conditioning) |
+| **AO4407A** (Q1)         | P-Channel MOSFET used as a load switch |
+| **Li-Ion Battery** (BT1) | 3.7V 600mAh rechargeable battery |
+
+---
+
+## ⚙️ Working Principle
+
+1. **Power Input**
+   - The system can be powered via USB-C (VBUS) or from a Li-Ion battery (BT1).
+   - The **TP4056** charges the battery and powers the system when USB is connected.
+   - The **AO4407A MOSFET** acts as a switch to allow battery power when USB is disconnected.
+
+2. **Voltage Regulation**
+   - **AMS1117-3.3** converts the battery voltage (~3.7V) to **3.3V** to power the ESP32, camera, and other peripherals.
+
+3. **ESP32-S3 Controller**
+   - Acts as the brain of the system, communicating with:
+     - **Camera Module (OV2640)** via DVP interface (DATA[0–7], PCLK, XCLK, HREF, VSYNC).
+     - **Audio Amplifier (PAM8403)** for audio output.
+     - USB interface (for programming/data transfer).
+
+4. **Camera**
+   - The OV2640 connects directly to the ESP32-S3 using a parallel 8-bit interface with control signals.
+   - Powered by 3.3V and has separate analog (AVDD), digital (DVDD), and I/O power domains.
+
+5. **Audio Amplifier**
+   - **PAM8403** amplifies stereo output signals (LOUT, ROUT) for speaker playback.
+   - Controlled via SHDN and MUTE pins.
+
+---
+
+## 📌 Features
+
+- ✅ Compact and power-efficient design
+- ✅ Built-in USB charging via TP4056
+- ✅ Battery-operated with automatic switching
+- ✅ ESP32-S3 support for AI, image processing, and ML
+- ✅ Integrated camera and speaker support
+
+---
+
+## 📁 File Structure
+
+```
+📂 ECHO-Hardware/
+├── ECHO.kicad_sch       # Main schematic file
+├── ECHO.kicad_pcb       # PCB layout (if included)
+├── ECHO.pdf             # PDF version of the schematic
+├── README.md            # Project documentation
+```
+
+---
+
+## 🔋 Power Budget (Estimates)
+
+| Module       | Voltage | Current (approx.) |
+|--------------|---------|------------------|
+| ESP32-S3     | 3.3V    | 120–240 mA       |
+| OV2640       | 3.3V    | 60–100 mA        |
+| PAM8403      | 5V      | 100–200 mA       |
+| Total Peak   | —       | ~500 mA          |
+
+---
+
+## 📜 License
+
+This project is open-source and licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute with attribution.
