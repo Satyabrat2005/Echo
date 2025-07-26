@@ -120,5 +120,5 @@ To connect the frontend to the Motoko canister locally:
 - Expand frontend for voice, TTS, or IoT integration.
 
 ---
-
+## Hardware Documentation
 ![ECHO_Full_Hardware_Documentation_With_Netlist.pdf](ECHO_Full_Hardware_Documentation_With_Netlist.pdf)
