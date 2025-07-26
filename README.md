@@ -3,6 +3,11 @@
 ## Overview
 ECHO is a modular, privacy-first memory assistant built on the Internet Computer Protocol (ICP). It helps Alzheimer’s patients with context-aware cues and supports caregivers with real-time alerts and memory anchoring.
 
+## Team Overview 
+# Frontend work :- @Archana15-codes
+# Backend Work :- @Kartik1446, Satyabrat2005
+# IOT work :- @GitGudScrubss
+
 ## Website Overview
 ![My Image](basic.png)
 
