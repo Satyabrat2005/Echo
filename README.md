@@ -176,18 +176,6 @@ To connect the frontend to the Motoko canister locally:
 
 ---
 
-## 📁 File Structure
-
-```
-📂 ECHO-Hardware/
-├── ECHO.kicad_sch       # Main schematic file
-├── ECHO.kicad_pcb       # PCB layout (if included)
-├── ECHO.pdf             # PDF version of the schematic
-├── README.md            # Project documentation
-```
-
----
-
 ## 🔋 Power Budget (Estimates)
 
 | Module       | Voltage | Current (approx.) |
