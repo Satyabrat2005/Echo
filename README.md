@@ -125,6 +125,11 @@ To connect the frontend to the Motoko canister locally:
 
 ![My Image1](frontend/assets/ECHO_mapping-page-001.jpg)
 
+## Hardware Overview
+![WhatsApp Image 2025-07-26 at 21 03 29_388f11a4](https://github.com/user-attachments/assets/cf494a0e-cb62-4daa-99a7-825c485d37c1)
+
+
+
 ## 🖥️ Core Components
 
 | Component        | Description                                    |
