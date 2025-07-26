@@ -121,4 +121,4 @@ To connect the frontend to the Motoko canister locally:
 
 ---
 
-![ECHO_Full_Hardware_Documentation_With_Netlist.pdf]
+![ECHO_Full_Hardware_Documentation_With_Netlist.pdf](ECHO_Full_Hardware_Documentation_With_Netlist.pdf)
