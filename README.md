@@ -65,6 +65,8 @@ ECHO is a modular, privacy-first memory assistant built on the Internet Computer
 |  LLM Agent       | Dspy.ai                                   | Generates adaptive, empathetic responses using language models (LLM agent)     |
 |  Hosting         | Replit, Render, or ICP Mainnet            | Hosts frontend, ML API, and canisters for demo or production environments      |
 
+## Research paper ( to be uploaded)
+
 ## Setup & Deployment
 
 ### Prerequisites
