@@ -6,7 +6,12 @@ const Footer: React.FC = () => {
       <div className="container">
         <div className="footer-content">
           <div className="footer-brand">
-            <h3>🧠 ECHO</h3>
+            <h3><img 
+              src="/src/assets/Echo-logo.png" 
+              alt="ECHO Logo" 
+              style={{ height: '3rem', verticalAlign: 'middle', marginRight: '10px' }} 
+              className="logo-img"
+            /> ECHO</h3>
             <p>Empowering families affected by Alzheimer's through compassionate AI technology. Creating connections that matter, one memory at a time.</p>
             <div className="social-icons">
               <a href="#" className="social-icon" aria-label="Facebook">

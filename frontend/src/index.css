@@ -62,9 +62,9 @@ body {
 
 /* Navigation */
 .nav {
-    padding: 4.8px 0; /* Reduced from 16px to 30% (4.8px) */
+    padding: 0.8px 0; /* Reduced from 16px to 30% (4.8px) */
     background: rgba(15, 15, 15, 0.95);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(1px);
     border-bottom: 1px solid var(--border-primary);
     position: fixed;
     top: 0;
