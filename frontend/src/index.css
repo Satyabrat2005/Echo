@@ -62,7 +62,7 @@ body {
 
 /* Navigation */
 .nav {
-    padding: 0pxnp 0;
+    padding: 4.8px 0; /* Reduced from 16px to 30% (4.8px) */
     background: rgba(15, 15, 15, 0.95);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border-primary);
@@ -113,7 +113,7 @@ body {
 /* Hero Section */
 .hero {
     padding: 120px 0 80px;
-    background: var(--gradient-secondary);
+    background: transparent;
     position: relative;
     overflow: hidden;
 }
@@ -202,8 +202,7 @@ body {
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    background: transparent;
     color: var(--text-primary);
     border: 1px solid var(--border-secondary);
 }
@@ -224,14 +223,11 @@ body {
 .echo-device {
     width: 320px;
     height: 320px;
-    background: var(--bg-card);
-    border-radius: 50%;
-    box-shadow: var(--shadow-lg);
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    border: 1px solid var(--border-secondary);
     animation: pulse-glow 4s ease-in-out infinite;
 }
 
@@ -255,7 +251,7 @@ body {
 /* Stats Section */
 .stats {
     padding: 80px 0;
-    background: var(--bg-secondary);
+    background: transparent;
 }
 
 .stats-grid {
@@ -265,13 +261,9 @@ body {
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    background: transparent;
     padding: 40px 32px;
-    border-radius: 16px;
     text-align: center;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border-primary);
     transition: all 0.3s ease;
 }
 
@@ -304,7 +296,7 @@ body {
 /* How It Works */
 .how-it-works {
     padding: 80px 0;
-    background: var(--bg-primary);
+    background: transparent;
 }
 
 .section-title {
@@ -333,13 +325,9 @@ body {
 }
 
 .step-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    background: transparent;
     padding: 40px 32px;
-    border-radius: 16px;
     text-align: center;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border-primary);
     position: relative;
     transition: all 0.3s ease;
 }
@@ -389,7 +377,7 @@ body {
 /* Testimonials */
 .testimonials {
     padding: 80px 0;
-    background: var(--bg-secondary);
+    background: transparent;
 }
 
 .testimonials-grid {
@@ -399,12 +387,8 @@ body {
 }
 
 .testimonial-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    background: transparent;
     padding: 40px;
-    border-radius: 16px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border-primary);
     border-left: 4px solid var(--accent-primary);
     transition: all 0.3s ease;
 }
@@ -454,7 +438,7 @@ body {
 
 /* Footer */
 .footer {
-    background: var(--bg-tertiary);
+    background: transparent;
     padding: 64px 0 32px;
     border-top: 1px solid var(--border-primary);
 }
@@ -513,7 +497,7 @@ body {
 .social-icon {
     width: 40px;
     height: 40px;
-    background: var(--bg-elevated);
+    background: transparent;
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -557,14 +541,11 @@ body {
 }
 
 .modal-content {
-    background: var(--bg-card);
+    background: transparent;
     padding: 48px;
-    border-radius: 20px;
     max-width: 520px;
     width: 90%;
     text-align: center;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--border-secondary);
     position: relative;
 }
 
