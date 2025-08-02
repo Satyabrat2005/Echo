@@ -9,7 +9,7 @@ const Navigation: React.FC = () => {
             <img 
               src="/src/assets/Echo-logo.png" 
               alt="ECHO Logo" 
-              style={{ height: '3.5rem', verticalAlign: 'middle', marginRight: '10px' }} 
+              style={{ height: '3.5rem', verticalAlign: 'middle', marginRight: '1px' }} 
               className="logo-img"
             />
             ECHO
