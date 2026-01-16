@@ -25,7 +25,7 @@ body.dark {
   --glow-color-rgb: 248, 209, 115; /* Dark theme glow from #F8D173 */
 }
 
-/* Theme backgrounds so the universal MagnetLines background is visible */
+/* Dark theme background */
 body.dark {
   background-color: #000000;
   color: #F9E4C8;

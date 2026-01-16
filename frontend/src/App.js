@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
 import Navbar from './landing/Navbar';
 import TeamPage from './landing/TeamPage';
-import { themes } from './styles/tailwindStyles';
 import './App.css';
-import PixelBlast from './PixelBlast';
-import DarkVeil from './DarkVeil';
 
-import LoginPage from './modals/LoginPage';
-import ProfileSetupPage from './modals/ProfileSetupPage';
-import LogoutConfirmModal from './modals/LogoutConfirmModal';
+
 import ListenToEchoModal from './modals/ListenToEchoModal';
 import AddMomentModal from './modals/AddMomentModal';
 import RecordMemoryModal from './modals/RecordMemoryModal';
@@ -17,43 +11,22 @@ import MemoryJournalModal from './modals/MemoryJournalModal';
 import RemindersModal from './modals/RemindersModal';
 import AddWriteUpModal from './modals/AddWriteUpModal';
 import DashboardModal from './modals/DashboardModal';
+import ViewportLazyPixelBlast from './components/ViewportLazyPixelBlast';
 
 const App = () => {
-  const [theme, setTheme] = useState('dark');
   const [currentPage, setCurrentPage] = useState('landing');
   const [activeModal, setActiveModal] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userProfile, setUserProfile] = useState(null);
-  const currentColors = themes[theme];
-
-  const toggleTheme = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  const [userProfile, setUserProfile] = useState({ name: 'User', dob: '', gender: '' });
 
   const handleGetStarted = () => {
-    if (isLoggedIn) {
-      setCurrentPage('dashboard');
-    } else {
-      setActiveModal('login');
-    }
+    setCurrentPage('dashboard');
   };
 
   const handleCloseModal = () => {
     setActiveModal(null);
   };
 
-  const handleLoginSuccess = (userData) => {
-    setIsLoggedIn(true);
-    setUserProfile(userData);
-    setActiveModal('profile-setup');
-  };
-
-  const handleProfileComplete = (profileData) => {
-    setUserProfile(prev => ({ ...prev, ...profileData }));
-    setCurrentPage('dashboard');
-  };
-
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUserProfile(null);
     setCurrentPage('landing');
     setActiveModal(null);
   };
@@ -62,47 +35,17 @@ const App = () => {
     setCurrentPage('landing');
   };
 
-  useEffect(() => {
-    document.body.className = theme;
-  }, [theme]);
-
   const renderModal = () => {
     switch (activeModal) {
-      case 'login':
-        return (
-          <LoginPage
-            theme={theme}
-            onClose={handleCloseModal}
-            onLoginSuccess={handleLoginSuccess}
-          />
-        );
-      case 'profile-setup':
-        return (
-          <ProfileSetupPage
-            theme={theme}
-            onClose={handleCloseModal}
-            onProfileComplete={handleProfileComplete}
-          />
-        );
-      case 'logout-confirm':
-        return (
-          <LogoutConfirmModal
-            theme={theme}
-            onClose={handleCloseModal}
-            onConfirmLogout={handleLogout}
-          />
-        );
       case 'listen-echo':
         return (
           <ListenToEchoModal
-            theme={theme}
             onClose={handleCloseModal}
           />
         );
       case 'add-moment':
         return (
           <AddMomentModal
-            theme={theme}
             onClose={handleCloseModal}
             onSaveMoment={(title, type) => {
               console.log('Moment saved:', { title, type });
@@ -113,7 +56,6 @@ const App = () => {
       case 'record-memory':
         return (
           <RecordMemoryModal
-            theme={theme}
             onClose={handleCloseModal}
             onSaveMemory={(title, audioBlob) => {
               console.log('Memory saved:', { title, audioBlob });
@@ -124,21 +66,18 @@ const App = () => {
       case 'memory-journal':
         return (
           <MemoryJournalModal
-            theme={theme}
             onClose={handleCloseModal}
           />
         );
       case 'reminders':
         return (
           <RemindersModal
-            theme={theme}
             onClose={handleCloseModal}
           />
         );
       case 'add-writeup':
         return (
           <AddWriteUpModal
-            theme={theme}
             onClose={handleCloseModal}
             onSaveWriteUp={(title, content) => {
               console.log('Write-up saved:', { title, content });
@@ -154,9 +93,9 @@ const App = () => {
   if (currentPage === 'team') {
     return (
       <div style={{ minHeight: '100vh', position: 'relative' }}>
-        <div style={{ position: 'relative', zIndex: 1, color: currentColors.primaryText }}>
-          <Navbar theme={theme} toggleTheme={toggleTheme} onGetStartedClick={handleGetStarted} onTeamClick={() => setCurrentPage('team')} isLoggedIn={isLoggedIn} currentPage={currentPage} />
-          <TeamPage theme={theme} onBack={() => setCurrentPage('landing')} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <Navbar onGetStartedClick={handleGetStarted} onTeamClick={() => setCurrentPage('team')} currentPage={currentPage} />
+          <TeamPage onBack={() => setCurrentPage('landing')} />
         </div>
       </div>
     );
@@ -165,12 +104,11 @@ const App = () => {
   if (currentPage === 'dashboard') {
     return (
       <div style={{ minHeight: '100vh', position: 'relative' }}>
-        <div style={{ position: 'relative', zIndex: -1, color: currentColors.primaryText }}>
-          <Navbar theme={theme} toggleTheme={toggleTheme} onGetStartedClick={handleGetStarted} onTeamClick={() => setCurrentPage('team')} isLoggedIn={isLoggedIn} currentPage={currentPage} />
+        <div style={{ position: 'relative', zIndex: -1 }}>
+          <Navbar onGetStartedClick={handleGetStarted} onTeamClick={() => setCurrentPage('team')} currentPage={currentPage} />
           <DashboardModal
-            theme={theme}
             onClose={handleBackToLanding}
-            onLogout={() => setActiveModal('logout-confirm')}
+            onLogout={() => setCurrentPage('landing')}
             userProfile={userProfile}
           />
         </div>
@@ -179,144 +117,199 @@ const App = () => {
   }
 
   return (
-    <div style={{ minHeight: '100vh', position: 'relative' }}>
-
-      <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: -1 }}>
-        <PixelBlast
-          variant="circle"
-          pixelSize={6}
-          color="#B19EEF"
-          patternScale={3}
-          patternDensity={1.2}
-          pixelSizeJitter={0.5}
-          enableRipples
-          rippleSpeed={0.4}
-          rippleThickness={0.12}
-          rippleIntensityScale={1.5}
-          liquid
-          liquidStrength={0.12}
-          liquidRadius={1.2}
-          liquidWobbleSpeed={5}
-          speed={0.6}
-          edgeFade={0.25}
-          transparent
-        />
-      </div>
-      <div style={{ position: 'relative', zIndex: 1, color: currentColors.primaryText }}>
-        <Navbar theme={theme} toggleTheme={toggleTheme} onGetStartedClick={handleGetStarted} onTeamClick={() => setCurrentPage('team')} isLoggedIn={isLoggedIn} currentPage={currentPage} />
-        <main className="pt-20">
-          <section id="home" className="relative flex flex-col md:flex-row items-center justify-center py-24 md:py-32 px-6 text-center md:text-left">
-            <div style={{ width: '100%', height: '600px', position: 'absolute', top: 0, left: 0, overflow: 'hidden' }}>
-              <DarkVeil />
+    <div style={{ minHeight: '100vh', position: 'relative', backgroundColor: '#000000' }}>
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <Navbar onGetStartedClick={handleGetStarted} onTeamClick={() => setCurrentPage('team')} currentPage={currentPage} />
+        <main className="pt-16 sm:pt-20">
+          <section id="home" className="relative flex flex-col items-center justify-center" style={{ backgroundColor: '#000000', minHeight: '100vh', willChange: 'transform' }}>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <iframe 
+                src='https://my.spline.design/claritystream-ffDXp5GK0BOraYABqFxbqISp/' 
+                frameBorder='0' 
+                width='100%' 
+                height='100%'
+                title="3D Visualization"
+                loading="lazy"
+                style={{ display: 'block' }}
+              />
+              {/* Cover Spline watermark */}
+              <div
+                className="absolute bottom-0 left-0 right-0 sm:bottom-0 sm:right-0 sm:left-auto pointer-events-none"
+                style={{
+                  width: '100%',
+                  height: '60px',
+                  background: '#000000',
+                  zIndex: 5
+                }}
+              />
             </div>
-            <div className="md:w-1/2 p-4 relative z-10">
-              <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight" style={{ color: currentColors.primaryText }}>
+            <div className="relative z-10 text-center px-4 sm:px-6 py-16 sm:py-24">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 sm:mb-6 leading-tight text-white">
                 Reimagining <br /> Memories with AI
               </h1>
-              <p className="text-lg md:text-xl max-w-2xl mx-auto mb-10" style={{ color: currentColors.primaryText }}>
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl max-w-2xl mx-auto mb-8 sm:mb-10 text-white leading-relaxed">
                 ECHO helps you capture, organize, and revisit life's precious moments through speech. Stay connected to your memories, effortlessly.
               </p>
             </div>
           </section>
 
-          <motion.section id="how-it-works" className="py-24 md:py-32 px-6" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-extrabold mb-12 text-center" style={{ color: currentColors.primaryText }}>How It Works</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {[{title: 'Capture', desc: 'Record memories by speaking naturally to ECHO.'}, {title: 'Organize', desc: 'Your memories are categorized and searchable.'}, {title: 'Revisit', desc: 'Listen back and relive stories anytime.'}].map((step, idx) => (
-                  <div key={step.title} className="p-8 rounded-2xl text-center shadow-lg" style={{ backgroundColor: currentColors.secondaryBg }}>
-                    <div className="w-12 h-12 mx-auto mb-4 rounded-full flex items-center justify-center text-lg font-bold" style={{ backgroundColor: currentColors.accentGold, color: currentColors.secondaryText }}>{idx + 1}</div>
-                    <h3 className="text-2xl font-bold mb-2" style={{ color: currentColors.primaryText }}>{step.title}</h3>
-                    <p className="opacity-80 text-sm" style={{ color: currentColors.primaryText }}>{step.desc}</p>
+          <section id="how-it-works" className="py-12 sm:py-16 md:py-24 lg:py-32 px-4 sm:px-6 relative" style={{ backgroundColor: '#000000' }}>
+            <ViewportLazyPixelBlast
+              className="absolute inset-0 pointer-events-none hidden sm:block"
+              style={{ zIndex: 0 }}
+              variant="circle"
+              pixelSize={6}
+              color="#B19EEF"
+              patternScale={3}
+              patternDensity={1.2}
+              pixelSizeJitter={0.5}
+              enableRipples
+              rippleSpeed={0.4}
+              rippleThickness={0.12}
+              rippleIntensityScale={1.5}
+              liquid
+              liquidStrength={0.12}
+              liquidRadius={1.2}
+              liquidWobbleSpeed={5}
+              speed={0.6}
+              edgeFade={0.25}
+              transparent
+            />
+            <div className="max-w-6xl mx-auto relative" style={{ zIndex: 2 }}>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-8 sm:mb-10 md:mb-12 text-center text-white">How It Works</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                  {[{title: 'Capture', desc: 'Record memories by speaking naturally to ECHO.'}, {title: 'Organize', desc: 'Your memories are categorized and searchable.'}, {title: 'Revisit', desc: 'Listen back and relive stories anytime.'}].map((step, idx) => (
+                    <div key={step.title} className="p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl text-center transition-all duration-300 hover:scale-105 cursor-pointer group" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)' }}>
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center text-base sm:text-lg font-bold text-white" style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)' }}>{idx + 1}</div>
+                      <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-white">{step.title}</h3>
+                      <p className="text-gray-400 text-xs sm:text-sm">{step.desc}</p>
+                    </div>
+                  ))}
+                </div>
+            </div>
+          </section>
+
+          <section id="features" className="py-12 sm:py-16 md:py-24 lg:py-32 px-4 sm:px-6 relative" style={{ backgroundColor: '#000000' }}>
+            <ViewportLazyPixelBlast
+              className="absolute inset-0 pointer-events-none hidden sm:block"
+              style={{ zIndex: 0 }}
+              variant="circle"
+              pixelSize={6}
+              color="#B19EEF"
+              patternScale={3}
+              patternDensity={1.2}
+              pixelSizeJitter={0.5}
+              enableRipples
+              rippleSpeed={0.4}
+              rippleThickness={0.12}
+              rippleIntensityScale={1.5}
+              liquid
+              liquidStrength={0.12}
+              liquidRadius={1.2}
+              liquidWobbleSpeed={5}
+              speed={0.6}
+              edgeFade={0.25}
+              transparent
+            />
+            <div className="max-w-6xl mx-auto relative" style={{ zIndex: 2 }}>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-8 sm:mb-10 md:mb-12 text-center text-white">Features</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                {["Secure On-Chain Memory & Logic", "Smart Memory Recall & Caregiver Anchoring", "Emotion & Behavior Detection", "Adaptive AI Reasoning & Empathetic Responses", "Real-Time Caregiver Alerts & Monitoring", "Modular, Extensible Architecture"].map((title) => (
+                  <div key={title} className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 cursor-pointer group" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)' }}>
+                    <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg mb-3 sm:mb-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)' }} />
+                    <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-white">{title}</h3>
+                    <p className="text-gray-400 text-xs sm:text-sm">Short description of a core capability. Fully responsive with Tailwind utility classes.</p>
                   </div>
                 ))}
               </div>
             </div>
-          </motion.section>
+          </section>
 
-          <motion.section id="features" className="py-24 md:py-32 px-6" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className="p-6 rounded-2xl shadow-lg" style={{ backgroundColor: currentColors.secondaryBg }}>
-                <div className="h-10 w-10 rounded-lg mb-4" style={{ backgroundColor: currentColors.accentGold }} />
-                <h3 className="text-xl font-bold mb-2">Secure On-Chain Memory & Logic</h3>
-                <p className="opacity-80 text-sm">Short description of a core capability. Fully responsive with Tailwind utility classes.</p>
-              </div>
-              <div className="p-6 rounded-2xl shadow-lg" style={{ backgroundColor: currentColors.secondaryBg }}>
-                <div className="h-10 w-10 rounded-lg mb-4" style={{ backgroundColor: currentColors.accentGold }} />
-                <h3 className="text-xl font-bold mb-2">Smart Memory Recall & Caregiver Anchoring</h3>
-                <p className="opacity-80 text-sm">Short description of a core capability. Fully responsive with Tailwind utility classes.</p>
-              </div>
-              <div className="p-6 rounded-2xl shadow-lg" style={{ backgroundColor: currentColors.secondaryBg }}>
-                <div className="h-10 w-10 rounded-lg mb-4" style={{ backgroundColor: currentColors.accentGold }} />
-                <h3 className="text-xl font-bold mb-2">Emotion & Behavior Detection</h3>
-                <p className="opacity-80 text-sm">Short description of a core capability. Fully responsive with Tailwind utility classes.</p>
-              </div>
-              <div className="p-6 rounded-2xl shadow-lg" style={{ backgroundColor: currentColors.secondaryBg }}>
-                <div className="h-10 w-10 rounded-lg mb-4" style={{ backgroundColor: currentColors.accentGold }} />
-                <h3 className="text-xl font-bold mb-2">Adaptive AI Reasoning & Empathetic Responses</h3>
-                <p className="opacity-80 text-sm">Short description of a core capability. Fully responsive with Tailwind utility classes.</p>
-              </div>
-              <div className="p-6 rounded-2xl shadow-lg" style={{ backgroundColor: currentColors.secondaryBg }}>
-                <div className="h-10 w-10 rounded-lg mb-4" style={{ backgroundColor: currentColors.accentGold }} />
-                <h3 className="text-xl font-bold mb-2">Real-Time Caregiver Alerts & Monitoring</h3>
-                <p className="opacity-80 text-sm">Short description of a core capability. Fully responsive with Tailwind utility classes.</p>
-              </div>
-              <div className="p-6 rounded-2xl shadow-lg" style={{ backgroundColor: currentColors.secondaryBg }}>
-                <div className="h-10 w-10 rounded-lg mb-4" style={{ backgroundColor: currentColors.accentGold }} />
-                <h3 className="text-xl font-bold mb-2">Modular, Extensible Architecture</h3>
-                <p className="opacity-80 text-sm">Short description of a core capability. Fully responsive with Tailwind utility classes.</p>
-              </div>
-            </div>
-          </motion.section>
-
-          <motion.section id="stories" className="py-24 md:py-32 px-6" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-extrabold mb-12 text-center" style={{ color: currentColors.primaryText }}>Stories</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <section id="stories" className="py-12 sm:py-16 md:py-24 lg:py-32 px-4 sm:px-6 relative" style={{ backgroundColor: '#000000' }}>
+            <ViewportLazyPixelBlast
+              className="absolute inset-0 pointer-events-none hidden sm:block"
+              style={{ zIndex: 0 }}
+              variant="circle"
+              pixelSize={6}
+              color="#B19EEF"
+              patternScale={3}
+              patternDensity={1.2}
+              pixelSizeJitter={0.5}
+              enableRipples
+              rippleSpeed={0.4}
+              rippleThickness={0.12}
+              rippleIntensityScale={1.5}
+              liquid
+              liquidStrength={0.12}
+              liquidRadius={1.2}
+              liquidWobbleSpeed={5}
+              speed={0.6}
+              edgeFade={0.25}
+              transparent
+            />
+            <div className="max-w-6xl mx-auto relative" style={{ zIndex: 2 }}>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-8 sm:mb-10 md:mb-12 text-center text-white">Stories</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                 {["ECHO helped me remember my grandfather's stories.", "We revisit our travel memories together.", "Recording daily moments has been life-changing."].map((quote, i) => (
-                  <div key={i} className="p-6 rounded-2xl shadow-lg" style={{ backgroundColor: currentColors.secondaryBg }}>
-                    <p className="text-sm leading-relaxed" style={{ color: currentColors.primaryText }}>
-                      “{quote}”
+                  <div key={i} className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 cursor-pointer" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)' }}>
+                    <p className="text-xs sm:text-sm leading-relaxed text-gray-300">
+                      "{quote}"
                     </p>
-                    <div className="mt-4 h-1 w-12 rounded" style={{ backgroundColor: currentColors.accentGold }} />
+                    <div className="mt-3 sm:mt-4 h-1 w-10 sm:w-12 rounded" style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
                   </div>
                 ))}
               </div>
             </div>
-          </motion.section>
+          </section>
 
-          <motion.section id="resources" className="py-24 md:py-32 px-6" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-extrabold mb-12 text-center" style={{ color: currentColors.primaryText, textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Resources</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <section id="resources" className="py-12 sm:py-16 md:py-24 lg:py-32 px-4 sm:px-6 relative" style={{ backgroundColor: '#000000' }}>
+            <ViewportLazyPixelBlast
+              className="absolute inset-0 pointer-events-none hidden sm:block"
+              style={{ zIndex: 0 }}
+              variant="circle"
+              pixelSize={6}
+              color="#B19EEF"
+              patternScale={3}
+              patternDensity={1.2}
+              pixelSizeJitter={0.5}
+              enableRipples
+              rippleSpeed={0.4}
+              rippleThickness={0.12}
+              rippleIntensityScale={1.5}
+              liquid
+              liquidStrength={0.12}
+              liquidRadius={1.2}
+              liquidWobbleSpeed={5}
+              speed={0.6}
+              edgeFade={0.25}
+              transparent
+            />
+            <div className="max-w-6xl mx-auto relative" style={{ zIndex: 2 }}>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-8 sm:mb-10 md:mb-12 text-center text-white" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}>Resources</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                 {[{title: 'Getting Started', desc: 'Learn the basics of ECHO.'}, {title: 'Tips & Tricks', desc: 'Make the most of your memory journal.'}, {title: 'Support', desc: 'Need help? Start here.'}].map((res) => (
-                  <a key={res.title} href="#" className="p-6 rounded-2xl shadow-lg block hover:opacity-90 transition" style={{ backgroundColor: currentColors.secondaryBg }}>
-                    <h3 className="text-xl font-bold mb-2" style={{ color: currentColors.primaryText }}>{res.title}</h3>
-                    <p className="opacity-80 text-sm" style={{ color: currentColors.primaryText }}>{res.desc}</p>
+                  <a key={res.title} href="#" className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl block transition-all duration-300 hover:scale-105" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)' }}>
+                    <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-white">{res.title}</h3>
+                    <p className="text-gray-400 text-xs sm:text-sm">{res.desc}</p>
                   </a>
                 ))}
               </div>
             </div>
-          </motion.section>
+          </section>
         </main>
       </div>
 
       {/* Modal Overlay */}
-      <AnimatePresence>
-        {activeModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={handleCloseModal}
-          >
-            <div onClick={(e) => e.stopPropagation()}>
-              {renderModal()}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {activeModal && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={handleCloseModal}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            {renderModal()}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

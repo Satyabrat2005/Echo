@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { EffectComposer, EffectPass, RenderPass, Effect } from 'postprocessing';
 import './PixelBlast.css';
@@ -25,11 +25,11 @@ const createTouchTexture = () => {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   };
-  const drawPoint = p => {
+  const drawPoint = (p) => {
     const pos = { x: p.x * size, y: (1 - p.y) * size };
     let intensity = 1;
-    const easeOutSine = t => Math.sin((t * Math.PI) / 2);
-    const easeOutQuad = t => -t * (t - 2);
+    const easeOutSine = (t) => Math.sin((t * Math.PI) / 2);
+    const easeOutQuad = (t) => -t * (t - 2);
     if (p.age < maxAge * 0.3) intensity = easeOutSine(p.age / (maxAge * 0.3));
     else intensity = easeOutQuad(1 - (p.age - maxAge * 0.3) / (maxAge * 0.7)) || 0;
     intensity *= p.force;
@@ -44,7 +44,7 @@ const createTouchTexture = () => {
     ctx.arc(pos.x - offset, pos.y - offset, radius, 0, Math.PI * 2);
     ctx.fill();
   };
-  const addTouch = norm => {
+  const addTouch = (norm) => {
     let force = 0;
     let vx = 0;
     let vy = 0;
@@ -112,18 +112,11 @@ const createLiquidEffect = (texture, opts) => {
   return new Effect('LiquidEffect', fragment, {
     uniforms: new Map([
       ['uTexture', new THREE.Uniform(texture)],
-      ['uStrength', new THREE.Uniform(opts?.strength ?? 0.025)],
+      ['uStrength', new THREE.Uniform((opts && opts.strength) ?? 0.025)],
       ['uTime', new THREE.Uniform(0)],
-      ['uFreq', new THREE.Uniform(opts?.freq ?? 4.5)]
+      ['uFreq', new THREE.Uniform((opts && opts.freq) ?? 4.5)]
     ])
   });
-};
-
-const SHAPE_MAP = {
-  square: 0,
-  circle: 1,
-  triangle: 2,
-  diamond: 3
 };
 
 const VERTEX_SRC = `
@@ -287,34 +280,48 @@ void main(){
   }
 
   vec3 color = uColor;
-  fragColor = vec4(color, M);
+
+  vec3 srgbColor = mix(
+    color * 12.92,
+    1.055 * pow(color, vec3(1.0 / 2.4)) - 0.055,
+    step(0.0031308, color)
+  );
+
+  fragColor = vec4(srgbColor, M);
 }
 `;
+
+const SHAPE_MAP = {
+  square: 0,
+  circle: 1,
+  triangle: 2,
+  diamond: 3
+};
 
 const MAX_CLICKS = 10;
 
 const PixelBlast = ({
-  variant = 'square',
-  pixelSize = 3,
+  variant = 'circle',
+  pixelSize = 6,
   color = '#B19EEF',
   className,
   style,
   antialias = true,
-  patternScale = 2,
-  patternDensity = 1,
-  liquid = false,
-  liquidStrength = 0.1,
-  liquidRadius = 1,
-  pixelSizeJitter = 0,
+  patternScale = 3,
+  patternDensity = 1.2,
+  liquid = true,
+  liquidStrength = 0.12,
+  liquidRadius = 1.2,
+  pixelSizeJitter = 0.5,
   enableRipples = true,
-  rippleIntensityScale = 1,
-  rippleThickness = 0.1,
-  rippleSpeed = 0.3,
-  liquidWobbleSpeed = 4.5,
+  rippleIntensityScale = 1.5,
+  rippleThickness = 0.12,
+  rippleSpeed = 0.4,
+  liquidWobbleSpeed = 5,
   autoPauseOffscreen = true,
-  speed = 0.5,
+  speed = 0.6,
   transparent = true,
-  edgeFade = 0.5,
+  edgeFade = 0.25,
   noiseAmount = 0
 }) => {
   const containerRef = useRef(null);
@@ -323,6 +330,7 @@ const PixelBlast = ({
 
   const threeRef = useRef(null);
   const prevConfigRef = useRef(null);
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -367,9 +375,7 @@ const PixelBlast = ({
         uResolution: { value: new THREE.Vector2(0, 0) },
         uTime: { value: 0 },
         uColor: { value: new THREE.Color(color) },
-        uClickPos: {
-          value: Array.from({ length: MAX_CLICKS }, () => new THREE.Vector2(-1, -1))
-        },
+        uClickPos: { value: Array.from({ length: MAX_CLICKS }, () => new THREE.Vector2(-1, -1)) },
         uClickTimes: { value: new Float32Array(MAX_CLICKS) },
         uShapeType: { value: SHAPE_MAP[variant] ?? 0 },
         uPixelSize: { value: pixelSize * renderer.getPixelRatio() },
@@ -452,41 +458,37 @@ const PixelBlast = ({
         );
         const noisePass = new EffectPass(camera, noiseEffect);
         noisePass.renderToScreen = true;
-        if (composer && composer.passes.length > 0) composer.passes.forEach(p => (p.renderToScreen = false));
+        if (composer && composer.passes.length > 0) {
+          composer.passes.forEach(p => {
+            const pass = p;
+            if (pass && 'renderToScreen' in pass) pass.renderToScreen = false;
+          });
+        }
         composer.addPass(noisePass);
       }
       if (composer) composer.setSize(renderer.domElement.width, renderer.domElement.height);
-      const mapToPixels = e => {
+      const mapToPixels = (e) => {
         const rect = renderer.domElement.getBoundingClientRect();
         const scaleX = renderer.domElement.width / rect.width;
         const scaleY = renderer.domElement.height / rect.height;
         const fx = (e.clientX - rect.left) * scaleX;
         const fy = (rect.height - (e.clientY - rect.top)) * scaleY;
-        return {
-          fx,
-          fy,
-          w: renderer.domElement.width,
-          h: renderer.domElement.height
-        };
+        return { fx, fy, w: renderer.domElement.width, h: renderer.domElement.height };
       };
-      const onPointerDown = e => {
+      const onPointerDown = (e) => {
         const { fx, fy } = mapToPixels(e);
         const ix = threeRef.current?.clickIx ?? 0;
         uniforms.uClickPos.value[ix].set(fx, fy);
         uniforms.uClickTimes.value[ix] = uniforms.uTime.value;
         if (threeRef.current) threeRef.current.clickIx = (ix + 1) % MAX_CLICKS;
       };
-      const onPointerMove = e => {
+      const onPointerMove = (e) => {
         if (!touch) return;
         const { fx, fy, w, h } = mapToPixels(e);
         touch.addTouch({ x: fx / w, y: fy / h });
       };
-      renderer.domElement.addEventListener('pointerdown', onPointerDown, {
-        passive: true
-      });
-      renderer.domElement.addEventListener('pointermove', onPointerMove, {
-        passive: true
-      });
+      renderer.domElement.addEventListener('pointerdown', onPointerDown, { passive: true });
+      renderer.domElement.addEventListener('pointermove', onPointerMove, { passive: true });
       let raf = 0;
       const animate = () => {
         if (autoPauseOffscreen && !visibilityRef.current.visible) {
@@ -494,16 +496,20 @@ const PixelBlast = ({
           return;
         }
         uniforms.uTime.value = timeOffset + clock.getElapsedTime() * speedRef.current;
-        if (liquidEffect) liquidEffect.uniforms.get('uTime').value = uniforms.uTime.value;
+        if (liquidEffect) {
+          const liqEffect = liquidEffect;
+          const timeUniform = liqEffect.uniforms.get('uTime');
+          if (timeUniform) timeUniform.value = uniforms.uTime.value;
+        }
         if (composer) {
           if (touch) touch.update();
           composer.passes.forEach(p => {
-            const effs = p.effects;
-            if (effs)
-              effs.forEach(eff => {
-                const u = eff.uniforms?.get('uTime');
-                if (u) u.value = uniforms.uTime.value;
+            if (p.effects) {
+              p.effects.forEach(eff => {
+                const timeUniform = eff.uniforms?.get('uTime');
+                if (timeUniform) timeUniform.value = uniforms.uTime.value;
               });
+            }
           });
           composer.render();
         } else renderer.render(scene, camera);
@@ -542,9 +548,10 @@ const PixelBlast = ({
       if (transparent) t.renderer.setClearAlpha(0);
       else t.renderer.setClearColor(0x000000, 1);
       if (t.liquidEffect) {
-        const uStrength = t.liquidEffect;
+        const liqEffect = t.liquidEffect;
+        const uStrength = liqEffect.uniforms.get('uStrength');
         if (uStrength) uStrength.value = liquidStrength;
-        const uFreq = t.liquidEffect.uniforms.get('uFreq');
+        const uFreq = liqEffect.uniforms.get('uFreq');
         if (uFreq) uFreq.value = liquidWobbleSpeed;
       }
       if (t.touch) t.touch.radiusScale = liquidRadius;
